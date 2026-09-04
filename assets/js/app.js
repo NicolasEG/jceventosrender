@@ -1,42 +1,19 @@
-// ======================
-// HEADER SCROLL
-// ======================
-
-const header = document.querySelector('.header');
-
-window.addEventListener('scroll', () => {
-
-    if(window.scrollY > 80){
-        header.classList.add('header-scrolled');
-    }else{
-        header.classList.remove('header-scrolled');
-    }
-
-});
-
-// ======================
-// MOBILE MENU
-// ======================
-
-const menuBtn = document.getElementById('menuBtn');
-const nav = document.getElementById('mainNav');
-
-if(menuBtn){
-
-    menuBtn.addEventListener('click', () => {
-
-        nav.classList.toggle('show');
-
-    });
-
-}
+/*
+   El scroll del header y el menú mobile ya se manejan en el
+   <script> inline de cada página (evita declarar las mismas
+   variables dos veces en el scope global).
+*/
 
 // ======================
 // REVEAL ON SCROLL
 // ======================
 
-const reveals = document.querySelectorAll(
-    '.service-card,.event-card,.gallery-grid img,.cta-box'
+const autoReveals = document.querySelectorAll(
+    '.service-card,.event-card,.gallery-item,.cta-box,.info-card,.menu-section,.service-item,.chip'
+);
+
+const directionalReveals = document.querySelectorAll(
+    '.reveal,.reveal-left,.reveal-right,.reveal-zoom'
 );
 
 const observer = new IntersectionObserver(entries => {
@@ -47,6 +24,8 @@ const observer = new IntersectionObserver(entries => {
 
             entry.target.classList.add('show');
 
+            observer.unobserve(entry.target);
+
         }
 
     });
@@ -55,9 +34,15 @@ const observer = new IntersectionObserver(entries => {
     threshold:.15
 });
 
-reveals.forEach(el => {
+autoReveals.forEach(el => {
 
     el.classList.add('reveal');
+
+    observer.observe(el);
+
+});
+
+directionalReveals.forEach(el => {
 
     observer.observe(el);
 
@@ -173,30 +158,34 @@ document.getElementById("galleryModalImg");
 const galleryClose =
 document.querySelector(".gallery-close");
 
-galleryImages.forEach(img => {
+if(galleryModal && galleryModalImg && galleryClose){
 
-    img.addEventListener("click", () => {
+    galleryImages.forEach(img => {
 
-        galleryModal.classList.add("show");
+        img.addEventListener("click", () => {
 
-        galleryModalImg.src = img.src;
+            galleryModal.classList.add("show");
+
+            galleryModalImg.src = img.src;
+
+        });
 
     });
 
-});
-
-galleryClose.addEventListener("click", () => {
-
-    galleryModal.classList.remove("show");
-
-});
-
-galleryModal.addEventListener("click", (e) => {
-
-    if(e.target === galleryModal){
+    galleryClose.addEventListener("click", () => {
 
         galleryModal.classList.remove("show");
 
-    }
+    });
 
-});
+    galleryModal.addEventListener("click", (e) => {
+
+        if(e.target === galleryModal){
+
+            galleryModal.classList.remove("show");
+
+        }
+
+    });
+
+}
